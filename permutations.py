@@ -1,14 +1,16 @@
 import init_data
 import operator
 
-def _extend_word(word, size):
-    res = list(bytearray(word))
-    ext_len = size-len(res)%size
-    if (len(res) % size != 0):
-        res += [0x1] + [0x0]*(ext_len-2) + [0x80]*(ext_len-abs(ext_len-2)-1)
-    return res
+def _to_bytestr(word):
+    return list(bytearray(word))
 
-def _split (n, list):
+def _extend_word(word, size = 64):
+    ext_len = size-len(word)%size
+    if (len(word) % size != 0):
+        word += [0x1] + [0x0]*(ext_len-2) + [0x80]*(ext_len-abs(ext_len-2)-1)
+    return word
+
+def _split_every (list, n = 64):
     return [list[i:i+n] for i in range(0,len(list), n)]
 
 _j = range(0, init_data.box_size)
@@ -58,7 +60,7 @@ def _iota (A, rnd, w = 64):
     _k = range(0,w)
     res = A
     for k in _k:
-        res[0][0] = map(operator.xor, A[0][0], rnd)
+	res[0][0] = map(operator.xor, A[0][0], map(lambda x: rnd & (1 << x), range(0,w)))
     return res
 
 def _str_to_state (S, w = 64):

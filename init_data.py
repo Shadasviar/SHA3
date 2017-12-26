@@ -1,7 +1,10 @@
-box_size = int(5)
+import math
 
-# word length in bytes
-word_len = int(8)
+box_size = int(5)
+r = int(64)
+b = 25*r
+l = math.log(r, 2)
+n_rounds = 12 + 2*l
 
 RC=[0x0000000000000001,
     0x0000000000008082,

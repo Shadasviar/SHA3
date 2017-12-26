@@ -1,70 +1,29 @@
 import init_data
 import operator
+import sage.crypto.util
 import copy
+import utils
 
-def _to_bytestr(word):
-    return list(bytearray(word))
-
-def _extend_word(word, size):
+# in bytes
+def _pad_word(word, size):
     ext_len = size-len(word)%size
     if (len(word) % size != 0):
-        word += [0x1] + [0x0]*(ext_len-2) + [0x80]*(ext_len-abs(ext_len-2)-1)
+	word += to_str([chr(0x1)] + [chr(0x0)]*(ext_len-2) + [chr(0x80)]*(ext_len-abs(ext_len-2)-1))
     return word
-
-def _split_every (list, n):
-    return [list[i:i+n] for i in range(0,len(list), n)]
 
 _j = range(0, init_data.box_size)
 
-# apply f(i,j,k,a) for every element of A with k from 0 to w
-def _map_indexed (f, A, w = init_data.word_len):
+
+def map_2d (f, A):
     res = copy.deepcopy(A)
-    for i in _j:
-        for j in _j:
-            for k in range(0,w):
-                res[i][j][k] = f(i, j, k, A)
+    for x in _j:
+	for y in _j:
+	    res[x][y] = f(x, y, A)
     return res
 
-def _theta (A, w = init_data.word_len):
-    def C(i, k):
-        return reduce(operator.xor, map(lambda x: A[i][x][k], _j))
-    def D(i, k):
-        return C((i-1) % init_data.box_size, k) ^ C((i+1) % init_data.box_size, (k-1) % w)
-
-    return _map_indexed(lambda i,j,k,a: a[i][j][k] ^ D(i,k), A, w)
-
-def _ro (A, w = init_data.word_len):
-    _k = range(0,w)
-    t_range = range(0,24)
-    (i, j) = (1,0)
-    for t in t_range:
-	for k in _k:
-	    A[i][j][k] = A[i][j][(k - (t + 1)*(t + 2)/2) % w]
-	    (i,j) = (j, (2*i + 3*j) % init_data.box_size)
-    return A
-
-def _pi (A, w = init_data.word_len):
-    return _map_indexed(lambda i,j,k,a: a[(i + 3*j) % init_data.box_size][i][k], A, w)
-
-def _xi (A, w = init_data.word_len):
-    return _map_indexed(
-	    lambda i,j,k,a: a[i][j][k]
-	    ^ ((a[(i+1) % init_data.box_size][j][k] ^ 1)
-		* a[(i+2) % init_data.box_size][j][k]),
-	    A, w)
-
-def _test_bit (word, n):
-    if (word & (1 << n) != 0):
-	return 1
-    return 0
-
-def _iota (A, rnd, w = init_data.word_len):
-    for k in range(0,w):
-	A[0][0] = map(operator.xor, A[0][0], map(lambda x: _test_bit(rnd, x), range(0,w)))
-    return A
-
-def _str_to_state (S, w = init_data.word_len):
-    return _map_indexed(
-            lambda i,j,k,a: (init_data.box_size*i + j) * w + S[k], 
-	    [[[a for a in range(w)] for c in _j] for d in _j],
-            w)
+def _theta(A, w = init_data.r):
+    def C(x):
+	return reduce(operator.xor, map(lambda y: A[x][y], _j))
+    def D(x):
+	return C((x-1) % init_data.box_size) ^ (rot(C((x+1) % init_data.box_size), 1, init_data.r))
+    return map_2d(lambda x,y,a: a[x][y] ^ D(x), A)

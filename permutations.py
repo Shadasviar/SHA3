@@ -17,13 +17,11 @@ _j = range(0, init_data.box_size)
 
 # apply f(i,j,k,a) for every element of A with k from 0 to w
 def _map_indexed (f, A, w = init_data.word_len):
-    _k = range(0,w)
-    res = A
     for i in _j:
         for j in _j:
-            for k in _k:
-                res[i][j][k] = f(i, j, k, A)
-    return res
+            for k in range(0,w):
+                A[i][j][k] = f(i, j, k, A)
+    return A
 
 def _theta (A, w = init_data.word_len):
     def C(i, k):
@@ -35,16 +33,13 @@ def _theta (A, w = init_data.word_len):
 
 def _ro (A, w = init_data.word_len):
     _k = range(0,w)
-    res = A
-    for k in _k:
-        res[0][0][k] = A[0][0][k]
     t_range = range(0,24)
     (i, j) = (1,0)
     for t in t_range:
 	for k in _k:
-	    res[i][j][k] = A[i][j][(k - (t + 1)*(t + 2)/2) % w]
+	    A[i][j][k] = A[i][j][(k - (t + 1)*(t + 2)/2) % w]
 	    (i,j) = (j, (2*i + 3*j) % init_data.box_size)
-    return res
+    return A
 
 def _pi (A, w = init_data.word_len):
     return _map_indexed(lambda i,j,k,a: a[(i + 3*j) % init_data.box_size][i][k], A, w)
@@ -62,11 +57,9 @@ def _test_bit (word, n):
     return 0
 
 def _iota (A, rnd, w = init_data.word_len):
-    _k = range(0,w)
-    res = A
-    for k in _k:
-	res[0][0] = map(operator.xor, A[0][0], map(lambda x: _test_bit(rnd, x), range(0,w)))
-    return res
+    for k in range(0,w):
+	A[0][0] = map(operator.xor, A[0][0], map(lambda x: _test_bit(rnd, x), range(0,w)))
+    return A
 
 def _str_to_state (S, w = init_data.word_len):
     return _map_indexed(

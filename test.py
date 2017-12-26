@@ -2,14 +2,14 @@ import permutations
 
 _str = "HelloKittyABCDE12345"
 _bytestr = _to_bytestr(_str[:])
-_extended = _extend_word(_bytestr[:])
+_extended = _extend_word(_bytestr[:], 1088)
 _words = _split_every(_extended[:], init_data.word_len)
-_states = map(_str_to_state, _words)
-_t = map(_theta, _states)
-_r = map(_ro, _t)
-_p = map(_pi, _r)
-_x = map(_xi, _p)
-_iot = map(lambda x: _iota(x, init_data.RC[2]), _x)
+_state = _str_to_state(_words[0])
+_t = _theta(copy.deepcopy(_state))
+_r = _ro(copy.deepcopy(_t))
+_p = _pi(copy.deepcopy( _r))
+_x = _xi(copy.deepcopy( _p))
+_iot = _iota(copy.deepcopy(_x), init_data.RC[2])
 
 def test():
     print "word : ", _str

@@ -1,5 +1,7 @@
 box_size = int(5)
-word_len = int(64)
+
+# word length in bytes
+word_len = int(8)
 
 RC=[0x0000000000000001,
     0x0000000000008082,

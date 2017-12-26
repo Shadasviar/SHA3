@@ -1,10 +1,11 @@
 import init_data
 import operator
+import copy
 
 def _to_bytestr(word):
     return list(bytearray(word))
 
-def _extend_word(word, size = init_data.word_len):
+def _extend_word(word, size):
     ext_len = size-len(word)%size
     if (len(word) % size != 0):
         word += [0x1] + [0x0]*(ext_len-2) + [0x80]*(ext_len-abs(ext_len-2)-1)
@@ -17,11 +18,12 @@ _j = range(0, init_data.box_size)
 
 # apply f(i,j,k,a) for every element of A with k from 0 to w
 def _map_indexed (f, A, w = init_data.word_len):
+    res = copy.deepcopy(A)
     for i in _j:
         for j in _j:
             for k in range(0,w):
-                A[i][j][k] = f(i, j, k, A)
-    return A
+                res[i][j][k] = f(i, j, k, A)
+    return res
 
 def _theta (A, w = init_data.word_len):
     def C(i, k):

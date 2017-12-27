@@ -1,24 +1,22 @@
 import permutations
+import utils
+import init_data
 
-_str = "HelloKittyABCDE12345"
-_bytestr = _to_bytestr(_str[:])
-_extended = _extend_word(_bytestr[:], 1088)
-_words = _split_every(_extended[:], init_data.word_len)
-_state = _str_to_state(_words[0])
-_t = _theta(copy.deepcopy(_state))
-_r = _ro(copy.deepcopy(_t))
-_p = _pi(copy.deepcopy( _r))
-_x = _xi(copy.deepcopy( _p))
-_iot = _iota(copy.deepcopy(_x), init_data.RC[2])
 
 def test():
-    print "word : ", _str
-    print "bytestr: ", _bytestr
-    print "extended: ", _extended
-    print "splitted: ", _words
-    print "states: ", _states
-    print "theta: ", _t
-    print "ro: ", _r
-    print "pi: ", _p
-    print "xi: ", _x
-    print "iota: ", _iot
+    _str = "HelloKittyABCDE12345"
+    pad = utils.pad_word(_str, (1088/8))
+    words = utils.split_every(pad, (1088/8))
+    words[0] += utils.to_str([chr(0x0)]*((1600/8)-len(pad)))
+    s = utils.split_every(words[0], init_data.w/8)
+    s2 = utils.split_every(s, init_data.box_size)
+    pseudo_state = map(lambda x: map(lambda y: Integer(utils.word_to_int(y)), x), s2)
+
+    print "str: ", _str
+    print "extended word: ", pad
+    print "words: ", words
+
+    print "state: ", pseudo_state
+
+    roundx = permutations.round(pseudo_state, init_data.RC[3])
+    print "Round: ", roundx

@@ -1,9 +1,9 @@
 import math
 
 box_size = int(5)
-r = int(64)
-b = 25*r
-l = math.log(r, 2)
+w = int(64)
+b = 25*w
+l = math.log(w, 2)
 n_rounds = 12 + 2*l
 
 RC=[0x0000000000000001,

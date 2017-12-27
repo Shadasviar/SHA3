@@ -23,8 +23,9 @@ def split_at(word, n):
 
 def to_fixed_size_bin(a, w):
     num = a.binary()
-    return _to_str(['0']*(w-len(num))) + num
+    return to_str(['0']*(w-len(num))) + num
 
 def rot(W, r, w):
-    b = _split_at(_to_fixed_size_bin(W, w), r)
+    r = r % w
+    b = split_at(to_fixed_size_bin(W, w), r)
     return int(b[1] + b[0], base=2)

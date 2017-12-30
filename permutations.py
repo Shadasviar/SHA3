@@ -11,10 +11,8 @@ def _map_indexed_2d (f, A):
     return res
 
 def _theta(A, w = init_data.w):
-    def C(x):
-	return reduce(operator.xor, map(lambda y: A[x][y], range(init_data.box_size)))
-    def D(x):
-	return C((x-1) % init_data.box_size) ^ (utils.rot(C((x+1) % init_data.box_size), 1, w))
+    C = lambda x: reduce(operator.xor, map(lambda y: A[x][y], range(init_data.box_size)))
+    D = lambda x: C((x-1) % init_data.box_size) ^ (utils.rot(C((x+1) % init_data.box_size), 1, w))
     return _map_indexed_2d(lambda x,y,a: a[x][y] ^ D(x), A)
 
 def _ro_pi(A, w = init_data.w):

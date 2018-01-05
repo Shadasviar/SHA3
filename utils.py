@@ -8,7 +8,7 @@ def to_bytestr(word):
 # converts list of chars to string
 def to_str(h):
     if (len(h) < 1):
-	return ""
+        return ""
     return reduce(operator.add, h)
 
 def word_to_int(word):
@@ -23,8 +23,8 @@ def split_every (list, n):
 def pad_word(word, size):
     ext_len = size-len(word)%size
     if (ext_len == 1):
-	word += chr(0x86)
-	return word
+        word += chr(0x86)
+        return word
     word += to_str([chr(0x06)] + [chr(0x0)]*(ext_len-2) + [chr(0x80)]*(ext_len-abs(ext_len-2)-1))
     return word
 

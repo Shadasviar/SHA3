@@ -6,8 +6,8 @@ import utils
 def _map_indexed_2d (f, A):
     res = copy.deepcopy(A)
     for x in range(len(A)):
-	for y in range(len(A[x])):
-	    res[x][y] = f(x, y, A)
+        for y in range(len(A[x])):
+            res[x][y] = f(x, y, A)
     return res
 
 def _theta(A, w = init_data.w):
@@ -18,15 +18,15 @@ def _theta(A, w = init_data.w):
 def _ro_pi(A, w = init_data.w):
     B = copy.deepcopy(A)
     for x in range(len(A)):
-	for y in range(len(A[x])):
-	    B[y][(2*x + 3*y) % init_data.box_size] = utils.rot(A[x][y], init_data.r_offsets[x][y], w)
+        for y in range(len(A[x])):
+            B[y][(2*x + 3*y) % init_data.box_size] = utils.rot(A[x][y], init_data.r_offsets[x][y], w)
     return B
 
 def _xi(A, w = init_data.w):
     B = _ro_pi(A, w)
     return _map_indexed_2d(
-	    lambda x,y,a: B[x][y] ^ ((~B[(x+1) % init_data.box_size][y]) & B[(x+2) % init_data.box_size][y]),
-	    A)
+            lambda x,y,a: B[x][y] ^ ((~B[(x+1) % init_data.box_size][y]) & B[(x+2) % init_data.box_size][y]),
+            A)
 
 def _iota(A, rnd,  w = init_data.w):
     A[0][0] = A[0][0] ^ rnd

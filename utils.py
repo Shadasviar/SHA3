@@ -1,5 +1,6 @@
 import operator
 import sage.crypto.util
+from sage.rings.integer import Integer
 
 def to_bytestr(word):
     return list(bytearray(word))
@@ -21,8 +22,10 @@ def split_every (list, n):
 # in bytes
 def pad_word(word, size):
     ext_len = size-len(word)%size
-    if (len(word) % size != 0):
-	word += to_str([chr(0x1)] + [chr(0x0)]*(ext_len-2) + [chr(0x80)]*(ext_len-abs(ext_len-2)-1))
+    if (ext_len == 1):
+	word += chr(0x86)
+	return word
+    word += to_str([chr(0x06)] + [chr(0x0)]*(ext_len-2) + [chr(0x80)]*(ext_len-abs(ext_len-2)-1))
     return word
 
 # prepend word by zeroes, size of resulting word is size
@@ -33,7 +36,7 @@ def split_at(word, n):
     return [word[:n], word[n:]]
 
 def to_fixed_size_bin(a, w):
-    num = a.binary()
+    num = Integer(a).binary()
     return to_str(['0']*(w-len(num))) + num
 
 # Bitwise rotation of W with length ow w by r bits to left

@@ -37,3 +37,5 @@ def keccak(word, r = 1088, c = 512, d = 256):
         S = keccak_f(S)
 
     return utils.to_str(map(lambda x: format(x, 'x'), Z[:d/64]))
+
+SHA3_265 = keccak

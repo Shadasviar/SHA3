@@ -23,8 +23,8 @@ def keccak(word, r = 1088, c = 512, d = 256):
     S = [[0]*5 for i in range(init_data.box_size)]
 
     for Pi in P:
-        S = utils.split_every(Pi, init_data.box_size)
-        S = keccak_f(S)
+        S = map(operator.xor, utils.to_str(S), Pi)
+        S = keccak_f(utils.split_every(S, init_data.box_size))
 
     Z = []
     while (len(Z) < d/64):

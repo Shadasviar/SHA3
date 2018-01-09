@@ -18,22 +18,17 @@ def keccak(word, r = 1088, c = 512, d = 256):
     P = utils.split_every(P, init_data.w/8)
     P = map(lambda x: utils.word_to_int(x), P)
     P = utils.split_every(P, r/init_data.w)
+    P = map(partial(utils.pad_with_zero, size = (r+c)/init_data.w), P)
 
     S = [[0]*5 for i in range(init_data.box_size)]
 
     for Pi in P:
-        for x in range(init_data.box_size):
-            for y in range(init_data.box_size):
-                if((5*x + y) < (r/init_data.w)):
-                    S[x][y] ^= Pi[5*x + y]
+        S = utils.split_every(Pi, init_data.box_size)
         S = keccak_f(S)
 
     Z = []
     while (len(Z) < d/64):
-        for x in range(init_data.box_size):
-            for y in range(init_data.box_size):
-                if(5*x + y < r/init_data.w):
-                    Z += [S[x][y]]
+        Z = utils.to_str(S)
         S = keccak_f(S)
 
     return utils.to_str(map(lambda x: format(x, 'x'), Z[:d/64]))

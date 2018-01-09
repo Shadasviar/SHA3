@@ -24,18 +24,18 @@ def keccak(word, r = 1088, c = 512, d = 256):
     for Pi in P:
         for x in range(init_data.box_size):
             for y in range(init_data.box_size):
-                if((x + 5*y) < (r/init_data.w)):
-                    S[x][y] ^= Pi[x + 5*y]
+                if((5*x + y) < (r/init_data.w)):
+                    S[x][y] ^= Pi[5*x + y]
         S = keccak_f(S)
 
     Z = []
     while (len(Z) < d/64):
         for x in range(init_data.box_size):
             for y in range(init_data.box_size):
-                if(x + 5*y < r/init_data.w):
+                if(5*x + y < r/init_data.w):
                     Z += [S[x][y]]
         S = keccak_f(S)
 
     return utils.to_str(map(lambda x: format(x, 'x'), Z[:d/64]))
 
-SHA3_265 = keccak
+SHA3_256 = keccak

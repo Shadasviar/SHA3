@@ -11,8 +11,6 @@ def keccak_f(A):
 
 def keccak(word, c = 512, d = 256):
     r = int(1600 - c)
-    if (r+c != 1600):
-        raise Exception("r+c must be 1600")
 
     init_data.b = r+c
     P = utils.pad_word(word, r/8)

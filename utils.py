@@ -27,10 +27,6 @@ def pad_word(word, size):
     word += to_str([chr(0x06)] + [chr(0x0)]*(ext_len-2) + [chr(0x80)]*(ext_len-abs(ext_len-2)-1))
     return word
 
-# append to word zeroes, size of resulting word is size
-def pad_with_zero(word, size):
-    return word + [0]*(size-len(word))
-
 def split_at(word, n):
     return [word[:n], word[n:]]
 

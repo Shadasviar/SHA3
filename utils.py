@@ -1,6 +1,5 @@
 import operator
-import sage.crypto.util
-from sage.rings.integer import Integer
+from sage.crypto.util import ascii_to_bin
 
 # converts list of chars to string
 def to_str(h):
@@ -9,10 +8,7 @@ def to_str(h):
     return reduce(operator.add, h)
 
 little_endian = lambda x: int(to_str(list(reversed(split_every(format(x, "064b"), 8)))), 2)
-
-def word_to_int(word):
-    s = str(sage.crypto.util.ascii_to_bin(word))
-    return int(s, base=2)
+word_to_int = lambda x: int(str(ascii_to_bin(x)), 2)
 
 # split list for lists of lengths of n
 def split_every (list, n):
@@ -30,12 +26,8 @@ def pad_word(word, size):
 def split_at(word, n):
     return [word[:n], word[n:]]
 
-def to_fixed_size_bin(a, w):
-    num = Integer(a).binary()
-    return to_str(['0']*(w-len(num))) + num
-
-# Bitwise rotation of W with length ow w by r bits to left
+# Bitwise rotation of W with length of w by r bits to left
 def rot(W, r, w):
     r = r % w
-    b = split_at(to_fixed_size_bin(W, w), r)
+    b = split_at(format(W, "0"+str(w)+"b"), r)
     return int(b[1] + b[0], base=2)

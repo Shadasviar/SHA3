@@ -12,7 +12,6 @@ def keccak_f(A):
 def keccak(word, c = 512, d = 256):
     r = int(1600 - c)
 
-    init_data.b = r+c
     P = utils.pad_word(word, r/8)
     P = utils.split_every(P, init_data.w/8)
     P = map(lambda x: utils.word_to_int(x), P)

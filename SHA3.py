@@ -30,7 +30,7 @@ def keccak(word, c = 512, d = 256):
 
     Z = utils.to_str(map(partial(map, utils.little_endian), (matrix(S).transpose().rows())))
 
-    return utils.to_str(map(lambda x: format(x, 'x'), Z[:d/64]))
+    return utils.to_str(map(lambda x: format(x, '016x'), Z))[:d/4]
 
 SHA3_256 = keccak
 SHA3_512 = partial(keccak, c = 1024, d = 512)

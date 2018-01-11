@@ -2,9 +2,6 @@ import operator
 import sage.crypto.util
 from sage.rings.integer import Integer
 
-def to_bytestr(word):
-    return list(bytearray(word))
-
 # converts list of chars to string
 def to_str(h):
     if (len(h) < 1):

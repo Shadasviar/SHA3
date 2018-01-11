@@ -9,7 +9,8 @@ def keccak_f(A):
         A = round(A, init_data.RC[i])
     return A
 
-def keccak(word, r = 1088, c = 512, d = 256):
+def keccak(word, c = 512, d = 256):
+    r = int(1600 - c)
     if (r+c != 1600):
         raise Exception("r+c must be 1600")
 
@@ -34,3 +35,6 @@ def keccak(word, r = 1088, c = 512, d = 256):
     return utils.to_str(map(lambda x: format(x, 'x'), Z[:d/64]))
 
 SHA3_256 = keccak
+SHA3_512 = partial(keccak, c = 1024, d = 512)
+SHA3_384 = partial(keccak, c = 768, d = 384)
+SHA3_224 = partial(keccak, c = 448, d = 224)

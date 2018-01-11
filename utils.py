@@ -11,6 +11,8 @@ def to_str(h):
         return ""
     return reduce(operator.add, h)
 
+little_endian = lambda x: int(to_str(list(reversed(split_every(format(x, "064b"), 8)))), 2)
+
 def word_to_int(word):
     s = str(sage.crypto.util.ascii_to_bin(word))
     return int(s, base=2)
